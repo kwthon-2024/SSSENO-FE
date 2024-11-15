@@ -13,7 +13,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import reservationData from "../mock/ReservationPossible";
+import reservationData from "../../mock/ReservationPossible";
 import ReservationSurveyModal from "./ReservationSurveyModal";
 import ConsentModal from "./ConsentModal";
 import BookingConfirmationModal from "./BookingConfirmationModal";

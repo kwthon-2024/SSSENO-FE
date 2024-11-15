@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from "react";
 import { Container, Stack, Divider, Button, Grid, TextField } from "@mui/material";
-import FilterDropdown from "../components/FilterDropdown";
-import SearchBar from "../components/SearchBar";
-import ClassroomList from "../components/ClassroomList";
-import ClassroomModal from "../components/ClassroomModal";
-import Header from "../components/Header";
+import FilterDropdown from "../components/Classroom/FilterDropdown";
+import SearchBar from "../components/Classroom/SearchBar";
+import ClassroomList from "../components/Classroom/ClassroomList";
+import ClassroomModal from "../components/Classroom/ClassroomModal";
+import Header from "../components/Classroom/Header";
 import Pagination from "@mui/material/Pagination";
 import classroomFilterSearchData from "../mock/ClassroomFilterSearch";
-import AdvancedSearchModal from "../components/AdvancedSearchModal";
+import AdvancedSearchModal from "../components/Classroom/AdvancedSearchModal";
 
 const ClassroomPage = () => {
     const [isModalOpen, setModalOpen] = useState(false);
