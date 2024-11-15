@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from "react";
-import { Container, Stack, Divider, Button } from "@mui/material";
+import { Container, Stack, Divider, Button, Grid, TextField } from "@mui/material";
 import FilterDropdown from "../components/FilterDropdown";
 import SearchBar from "../components/SearchBar";
 import ClassroomList from "../components/ClassroomList";
 import ClassroomModal from "../components/ClassroomModal";
 import Header from "../components/Header";
 import Pagination from "@mui/material/Pagination";
-import classroomFilterSearchData from "../mock/ClassroomFilterSearch"; // 상세 검색 데이터
-import AdvancedSearchModal from "../components/AdvancedSearchModal"; // 상세 검색 모달
+import classroomFilterSearchData from "../mock/ClassroomFilterSearch";
+import AdvancedSearchModal from "../components/AdvancedSearchModal";
 
 const ClassroomPage = () => {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -18,11 +18,10 @@ const ClassroomPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    // 1. 상세 검색 데이터를 필터링 및 변환
+    // 상세 검색 데이터 필터링
     const filteredClassrooms = useMemo(() => {
         return classroomFilterSearchData.classrooms
             .filter((classroom) => {
-                // 기본 필터
                 const matchesBuilding =
                     !filters.building || classroom.Building_title === filters.building;
                 const matchesCapacity =
@@ -31,7 +30,6 @@ const ClassroomPage = () => {
                 const matchesSearchTerm =
                     !searchTerm || classroom.Place_title.includes(searchTerm);
 
-                // 상세 검색 필터
                 const matchesType =
                     !advancedFilters.type || classroom.Type === advancedFilters.type;
                 const matchesMic =
@@ -44,7 +42,6 @@ const ClassroomPage = () => {
                     !advancedFilters.deskType ||
                     classroom.Desk_type === advancedFilters.deskType;
 
-                // 모든 조건 만족
                 return (
                     matchesBuilding &&
                     matchesCapacity &&
@@ -56,16 +53,14 @@ const ClassroomPage = () => {
                 );
             })
             .map((classroom) => ({
-                // ClassroomData 포맷으로 변환
                 Building_title: classroom.Building_title,
                 Place_title: classroom.Place_title,
-                capacity: classroom.capacity, // capacity 포함
-                rating: Math.floor(Math.random() * 5) + 1, // Mock 데이터
+                capacity: classroom.capacity,
+                rating: Math.floor(Math.random() * 5) + 1,
             }));
     }, [filters, advancedFilters, searchTerm]);
 
-
-    // 2. 페이지네이션 처리
+    // 페이지네이션 처리
     const totalItems = filteredClassrooms.length;
     const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
     const paginatedClassrooms = filteredClassrooms.slice(
@@ -79,20 +74,37 @@ const ClassroomPage = () => {
         <>
             <Header />
             <Container sx={{ mt: 4 }}>
-                {/* 기본 필터와 검색 */}
-                <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
-                    <Stack direction="row" spacing={2}>
+                <Grid container spacing={2} alignItems="center">
+                    {/* 건물 필터 */}
+                    <Grid item xs={12} sm={4}>
                         <FilterDropdown filters={filters} setFilters={setFilters} />
+                    </Grid>
+
+                    {/* 검색창 */}
+                    <Grid item xs={12} sm={6}>
                         <SearchBar
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm}
                             label="강의실 번호를 입력하세요"
                         />
-                        <Button variant="outlined" onClick={() => setModalOpen(true)}>
+                    </Grid>
+
+                    {/* 상세 검색 버튼 */}
+                    <Grid item xs={12} sm={2}>
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            onClick={() => setModalOpen(true)}
+                            sx={{
+                                height: "56px", // 검색창 높이와 동일하게 설정
+                                textAlign: "center",
+                            }}
+                        >
                             상세 검색
                         </Button>
-                    </Stack>
-                </Stack>
+                    </Grid>
+                </Grid>
+
                 <Divider sx={{ my: 2 }} />
 
                 {/* 강의실 리스트 */}
