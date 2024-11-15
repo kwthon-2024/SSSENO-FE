@@ -4,9 +4,9 @@ import FilterDropdown from "../components/Classroom/FilterDropdown";
 import SearchBar from "../components/Classroom/SearchBar";
 import ClassroomList from "../components/Classroom/ClassroomList";
 import ClassroomModal from "../components/Classroom/ClassroomModal";
-import Header from "../components/Classroom/Header";
+import Header from "../components/shared/Header";
 import Pagination from "@mui/material/Pagination";
-import classroomFilterSearchData from "../mock/ClassroomFilterSearch";
+import classroomFilterSearchData from "../mock/Classroom/ClassroomFilterSearch";
 import AdvancedSearchModal from "../components/Classroom/AdvancedSearchModal";
 
 const ClassroomPage = () => {
@@ -72,7 +72,6 @@ const ClassroomPage = () => {
 
     return (
         <>
-            <Header />
             <Container sx={{ mt: 4 }}>
                 <Grid container spacing={2} alignItems="center">
                     {/* 건물 필터 */}
