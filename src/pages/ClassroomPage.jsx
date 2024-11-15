@@ -5,38 +5,49 @@ import SearchBar from "../components/SearchBar";
 import ClassroomList from "../components/ClassroomList";
 import ClassroomModal from "../components/ClassroomModal";
 import Header from "../components/Header";
-import PaginationComponent from "../components/PaginationComponent";
-import { getPageData } from "../mock/ClassroomData";
+import Pagination from "@mui/material/Pagination";
+import classroomData from "../mock/ClassroomData"; // 데이터 가져오기
 
 const ClassroomPage = () => {
+    const allClassrooms = classroomData.classrooms; // 데이터 정의
     const [filters, setFilters] = useState({ building: "", capacity: "" });
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedClassroom, setSelectedClassroom] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-
-    // 페이지 데이터 가져오기
-    const { classrooms: allClassrooms, pagination } = getPageData(currentPage);
+    const itemsPerPage = 10;
 
     // 필터링 로직
     const filteredClassrooms = useMemo(() => {
         return allClassrooms.filter((classroom) => {
             const matchesBuilding =
                 filters.building === "" ||
-                classroom.Building_title === filters.building ||
-                (filters.building === "기타" &&
-                    (classroom.Building_title === "기념관" || classroom.Building_title === "한천재"));
+                classroom.Building_title === filters.building;
             const matchesCapacity =
-                filters.capacity === "" || classroom.capacity >= parseInt(filters.capacity, 10);
-            return matchesBuilding && matchesCapacity;
+                filters.capacity === "" ||
+                classroom.capacity >= parseInt(filters.capacity, 10);
+            const matchesSearchTerm =
+                searchTerm === "" ||
+                classroom.Place_title.includes(searchTerm);
+            return matchesBuilding && matchesCapacity && matchesSearchTerm;
         });
-    }, [allClassrooms, filters]);
+    }, [allClassrooms, filters, searchTerm]);
+
+    const totalItems = filteredClassrooms.length;
+    const totalPages = useMemo(() => {
+        return Math.max(1, Math.ceil(totalItems / itemsPerPage));
+    }, [totalItems, itemsPerPage]);
+    const paginatedClassrooms = filteredClassrooms.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handlePageChange = (event, value) => setCurrentPage(value);
 
     return (
         <>
             <Header />
             <Container sx={{ mt: 4 }}>
                 <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
-                    {/* 필터 및 검색 */}
                     <Stack direction="row" spacing={2}>
                         <FilterDropdown filters={filters} setFilters={setFilters} />
                         <SearchBar
@@ -48,22 +59,20 @@ const ClassroomPage = () => {
                 </Stack>
                 <Divider sx={{ my: 2 }} />
 
-                <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
-                    {/* 강의실 리스트 */}
-                    <ClassroomList
-                        classrooms={filteredClassrooms}
-                        onClassroomClick={setSelectedClassroom}
+                <ClassroomList
+                    classrooms={paginatedClassrooms}
+                    onClassroomClick={setSelectedClassroom}
+                />
+
+                <Stack alignItems="center" sx={{ mt: 2 }}>
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        onChange={handlePageChange}
+                        size="small"
                     />
                 </Stack>
 
-                {/* 페이지네이션 */}
-                <PaginationComponent
-                    totalPages={pagination.total_pages}
-                    currentPage={pagination.current_page}
-                    onPageChange={(e, page) => setCurrentPage(page)}
-                />
-
-                {/* 강의실 상세 모달 */}
                 {selectedClassroom && (
                     <ClassroomModal
                         open={!!selectedClassroom}
