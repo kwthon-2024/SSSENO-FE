@@ -44,7 +44,10 @@ const ClassroomList = ({ classrooms, onClassroomClick }) => {
                             {/* 건물 */}
                             <TableCell>{classroom.Building_title}</TableCell>
                             {/* 수용 인원 */}
-                            <TableCell>{`${classroom.capacity}명`}</TableCell>
+                            <TableCell>
+                                {classroom.capacity ? `${classroom.capacity}명` : "정보 없음"}
+                            </TableCell>
+
                             {/* 강의실 번호 */}
                             <TableCell>{classroom.Place_title}</TableCell>
                             {/* 별점 */}

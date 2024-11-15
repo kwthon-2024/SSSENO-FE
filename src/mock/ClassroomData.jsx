@@ -1,6 +1,6 @@
 const classroomData = {
     classrooms: [
-        { Building_title: "sf", Place_title: "101호", capacity: 30, rating: 4 },
+        { Building_title: "새빛관", Place_title: "101호", capacity: 30, rating: 4 },
         { Building_title: "비마관", Place_title: "102호", capacity: 40, rating: 5 },
         { Building_title: "한울관", Place_title: "103호", capacity: 60, rating: 3 },
         { Building_title: "참빛관", Place_title: "104호", capacity: 50, rating: 4 },
