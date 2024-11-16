@@ -14,27 +14,27 @@ const modalStyle = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "80%", // 폭
-    maxWidth: "600px", // 최대 폭
+    width: "80%",
+    maxWidth: "600px",
     bgcolor: "background.paper",
     borderRadius: 4,
     boxShadow: 24,
-    p: 0, // 전체 패딩 제거
-    overflow: "hidden", // 전체 스크롤 방지
+    p: 0,
+    overflow: "hidden",
     display: "flex",
     flexDirection: "column",
-    maxHeight: "90vh", // 화면의 90% 높이 제한
+    maxHeight: "90vh",
 };
 
 const contentStyle = {
-    flex: 1, // 남은 공간을 채우도록 설정
-    overflow: "auto", // 스크롤 가능
-    padding: "16px", // 내용 영역 패딩
+    flex: 1,
+    overflow: "auto",
+    padding: "16px",
 };
 
 const footerStyle = {
-    padding: "16px", // 버튼 영역 패딩
-    borderTop: "1px solid #ddd", // 버튼 영역 위쪽 경계선
+    padding: "16px",
+    borderTop: "1px solid #ddd",
 };
 
 const AdvancedSearchModal = ({ open, onClose, onApplyFilters }) => {
@@ -52,7 +52,15 @@ const AdvancedSearchModal = ({ open, onClose, onApplyFilters }) => {
     };
 
     const handleSearch = () => {
-        onApplyFilters(filters);
+        const parsedFilters = {
+            building_title: filters.building,
+            capacity_max: filters.capacity ? parseInt(filters.capacity, 10) : null,
+            type: filters.type || "",
+            hasMic: filters.hasMic === "true",
+            hasProjector: filters.hasProjector === "true",
+            deskType: filters.deskType || "",
+        };
+        onApplyFilters(parsedFilters); // 부모 컴포넌트로 필터 데이터 전달
         onClose(); // 모달 닫기
     };
 

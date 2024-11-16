@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Modal,
     Box,
@@ -13,10 +13,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import reservationData from "../../mock/Classroom/ReservationPossible";
 import ReservationSurveyModal from "./ReservationSurveyModal";
-import ConsentModal from "./ConsentModal";
-import BookingConfirmationModal from "./BookingConfirmationModal";
+import { fetchRoomDetails } from "../../api/classroomAPI"; // API 함수 호출
 
 const modalStyle = {
     position: "absolute",
@@ -35,15 +33,27 @@ const ReservationModal = ({ open, onClose, classroom, onComplete }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTimes, setSelectedTimes] = useState([]);
     const [surveyOpen, setSurveyOpen] = useState(false);
+    const [possibleTimetable, setPossibleTimetable] = useState([]); // API로 가져온 가능한 시간표 데이터
 
-    const currentClassroomReservation = reservationData.find(
-        (data) =>
-            data.building_name === classroom.Building_title &&
-            data.Place_title === classroom.Place_title
-    );
-    const possibleTimetable = currentClassroomReservation
-        ? currentClassroomReservation.Possible_timetable
-        : [];
+    useEffect(() => {
+        const loadPossibleTimetable = async () => {
+            if (classroom) {
+                try {
+                    // 강의실 상세 정보에서 가능한 시간표 데이터 가져오기
+                    const response = await fetchRoomDetails(
+                        classroom.Building_title,
+                        classroom.Place_title
+                    );
+                    const timetable = response.data?.[0]?.Possible_timetable || [];
+                    setPossibleTimetable(timetable); // 가능한 시간표 업데이트
+                } catch (error) {
+                    console.error("강의실 데이터 로드 실패:", error);
+                }
+            }
+        };
+
+        loadPossibleTimetable();
+    }, [classroom]);
 
     const handleTimeChange = (event, newTimes) => {
         setSelectedTimes(newTimes);
@@ -64,7 +74,7 @@ const ReservationModal = ({ open, onClose, classroom, onComplete }) => {
                 <Box sx={modalStyle}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography variant="h6">
-                            {classroom.Building_title} {classroom.Place_title}
+                            {classroom?.Building_title} {classroom?.Place_title}
                         </Typography>
                         <IconButton onClick={onClose}>
                             <CloseIcon />
@@ -155,8 +165,8 @@ const ReservationModal = ({ open, onClose, classroom, onComplete }) => {
                 open={surveyOpen}
                 onClose={() => setSurveyOpen(false)}
                 reservationInfo={{
-                    building: classroom.Building_title,
-                    room: classroom.Place_title,
+                    building: classroom?.Building_title,
+                    room: classroom?.Place_title,
                     date: selectedDate.toISOString().split("T")[0],
                     times: selectedTimes,
                 }}

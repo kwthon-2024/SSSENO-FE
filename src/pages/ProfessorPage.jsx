@@ -1,16 +1,15 @@
 import React, { useState, useMemo } from "react";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { Container, Stack, Divider, Pagination } from "@mui/material";
+import { Container, Stack, Divider, Pagination, Box } from "@mui/material";
 import ProfessorList from "../components/Professor/ProfessorList";
-import SearchBar from "../components/Professor/SearchBar";
+import ProfessorSearchBar from "../components/Professor/ProfessorSearchBar";
 import FilterDropdown from "../components/Professor/FilterDropdown";
 import SearchTypeDropdown from "../components/Professor/SearchTypeDropdown";
 import ProfessorName from "../mock/Professor/ProfessorName";
 import SubjectData from "../mock/Professor/SubjectData";
 import ProfessorDetail from "../mock/Professor/ProfessorDetail";
 import ProfessorModal from "../components/Professor/ProfessorModal";
-import Header from "../components/shared/Header";
-
+import ProfessorSearchSection from "../components/Professor/ProfessorSearchSection";
 // 테마 정의
 const theme = createTheme({
   palette: {
@@ -89,56 +88,74 @@ const ProfessorPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* Header */}
+      <Box
+        sx={{
+          minHeight: "100vh", // 페이지 전체 높이
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center", // 정중앙 배치
+          backgroundColor: "#f9f9f9", // 배경색
+          padding: 2,
+        }}
+      >
+        <Container
+          sx={{
+            maxWidth: "1000px", // 전체 컨테이너 너비 제한
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Stack
+            spacing={4}
+            divider={
+              <Divider
+                orientation="horizontal"
+                flexItem
+                sx={{
+                  width: "100%", // 구분선 길이를 부모 너비에 맞춤
+                  maxWidth: "1000px", // 컨테이너와 동일한 최대 너비 설정
+                }}
+              />
+            }
+          >
+            {/* Filter Section */}
+            <Stack spacing={4} divider={<Divider orientation="horizontal" flexItem />}>
+              {/* ProfessorSearchSection 컴포넌트 사용 */}
+              <ProfessorSearchSection
+                filters={filters}
+                setFilters={setFilters}
+                searchType={searchType}
+                setSearchType={setSearchType}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                onSearch={(query, filters, type) => {
+                  console.log("검색 실행:", { query, filters, type });
+                  // 검색 결과를 처리하는 로직 추가
+                }}
+              />
+            </Stack>
 
-      {/* Page Content */}
-      <Container sx={{ mt: 4 }}>
-        {/* Filter Section */}
-        <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
-          {/* Search Section */}
-          <Stack direction="row" spacing={2} alignItems="center">
-            {/* Filter Dropdown */}
-            <FilterDropdown filters={filters} setFilters={setFilters} />
-
-            {/* 검색 유형 드롭다운 */}
-            <SearchTypeDropdown searchType={searchType} setSearchType={setSearchType} />
-
-            {/* Search Bar */}
-            <SearchBar
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              label={searchType === "교수명" ? "교수님 성함을 입력하세요" : "과목명을 입력하세요"}
+            {/* Professors List */}
+            <ProfessorList
+              professors={paginatedProfessors}
+              onProfessorClick={setSelectedProfessor} // 교수 클릭 시 상태 업데이트
             />
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Stack alignItems="center" sx={{ mt: 2 }}>
+                <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  size="small"
+                />
+              </Stack>
+            )}
           </Stack>
-        </Stack>
-
-        {/* Professors List */}
-        <ProfessorList
-          professors={paginatedProfessors}
-          onProfessorClick={setSelectedProfessor} // 교수 클릭 시 상태 업데이트
-        />
-
-        {/* Pagination */}
-        {totalPages > 1 && ( // 페이지가 1개 이상일 때만 표시
-          <Stack alignItems="center" sx={{ mt: 2 }}>
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              size="small"
-            />
-          </Stack>
-        )}
-
-        {/* Professor Modal */}
-        {detailedProfessor && (
-          <ProfessorModal
-            open={Boolean(detailedProfessor)}
-            onClose={() => setSelectedProfessor(null)}
-            professor={detailedProfessor} // 상세 데이터 전달
-          />
-        )}
-      </Container>
+        </Container>
+      </Box>
     </ThemeProvider>
   );
 };

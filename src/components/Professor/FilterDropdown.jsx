@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { MenuItem, Select, FormControl, InputLabel, FormHelperText } from "@mui/material";
+import { MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 
 const FilterContainer = styled.div`
   display: flex;
@@ -12,7 +12,7 @@ const departmentOptions = {
     "전자정보공학대학": ["전자재료과", "전자융합학부"],
     "인문사회대학": ["산업심리학과", "영어산업학과"],
     "공과대학": ["화학공학과", "건축공학과"],
-    "기타": ["외부 강사"],
+    기타: ["외부 강사"],
 };
 
 const FilterDropdown = ({ filters, setFilters }) => {
@@ -25,7 +25,19 @@ const FilterDropdown = ({ filters, setFilters }) => {
 
     return (
         <FilterContainer>
-            <FormControl sx={{ m: 1, minWidth: 150 }}>
+            {/* 단과대 드롭다운 */}
+            <FormControl
+                sx={{
+                    m: 1,
+                    minWidth: 150,
+                    "& .MuiFormLabel-root": {
+                        color: "#b91c1c", // 라벨 기본 색상
+                    },
+                    "& .MuiFormLabel-root.Mui-focused": {
+                        color: "#b91c1c", // 포커스 시 라벨 색상
+                    },
+                }}
+            >
                 <InputLabel id="college-select-label">단과대</InputLabel>
                 <Select
                     labelId="college-select-label"
@@ -34,15 +46,44 @@ const FilterDropdown = ({ filters, setFilters }) => {
                     value={filters.college || ""}
                     onChange={handleFilterChange}
                     label="단과대"
+                    displayEmpty
+                    sx={{
+                        height: 40, // 드롭다운 높이
+                        "& .MuiOutlinedInput-notchedOutline": { borderColor: "#b91c1c" },
+                        "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#9e1d1d" },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#b91c1c" },
+                        "& .MuiSelect-select": {
+                            display: "flex",
+                            alignItems: "center", // 글씨 수직 정렬
+                            padding: "10px 12px",
+                        },
+                    }}
                 >
-                    <MenuItem value=""><em>전체</em></MenuItem>
+                    <MenuItem value="">
+                        <em>전체</em>
+                    </MenuItem>
                     {Object.keys(departmentOptions).map((college) => (
-                        <MenuItem key={college} value={college}>{college}</MenuItem>
+                        <MenuItem key={college} value={college}>
+                            {college}
+                        </MenuItem>
                     ))}
                 </Select>
             </FormControl>
 
-            <FormControl sx={{ m: 1, minWidth: 150 }} disabled={!filters.college}>
+            {/* 학과 드롭다운 */}
+            <FormControl
+                sx={{
+                    m: 1,
+                    minWidth: 150,
+                    "& .MuiFormLabel-root": {
+                        color: "#b91c1c",
+                    },
+                    "& .MuiFormLabel-root.Mui-focused": {
+                        color: "#b91c1c",
+                    },
+                }}
+                disabled={!filters.college}
+            >
                 <InputLabel id="department-select-label">학과</InputLabel>
                 <Select
                     labelId="department-select-label"
@@ -51,16 +92,31 @@ const FilterDropdown = ({ filters, setFilters }) => {
                     value={filters.department || ""}
                     onChange={handleFilterChange}
                     label="학과"
+                    displayEmpty
+                    sx={{
+                        height: 40,
+                        "& .MuiOutlinedInput-notchedOutline": { borderColor: "#b91c1c" },
+                        "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#9e1d1d" },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#b91c1c" },
+                        "& .MuiSelect-select": {
+                            display: "flex",
+                            alignItems: "center", // 글씨 수직 정렬
+                            padding: "10px 12px",
+                        },
+                    }}
                 >
-                    <MenuItem value=""><em>전체</em></MenuItem>
+                    <MenuItem value="">
+                        <em>전체</em>
+                    </MenuItem>
                     {currentDepartments.map((dept) => (
-                        <MenuItem key={dept} value={dept}>{dept}</MenuItem>
+                        <MenuItem key={dept} value={dept}>
+                            {dept}
+                        </MenuItem>
                     ))}
                 </Select>
             </FormControl>
         </FilterContainer>
     );
 };
-
 
 export default FilterDropdown;

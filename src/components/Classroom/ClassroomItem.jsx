@@ -1,7 +1,3 @@
-import React from "react";
-import { Paper, Stack, Typography, Button } from "@mui/material";
-import RatingStars from "./RatingStars";
-
 const ClassroomItem = ({ classroom, onDetailClick }) => {
     return (
         <Paper
@@ -13,6 +9,9 @@ const ClassroomItem = ({ classroom, onDetailClick }) => {
                 borderRadius: 2,
                 border: "1px solid #e0e0e0",
                 boxShadow: 1,
+                "&:hover": {
+                    backgroundColor: "#fdecec",
+                },
             }}
         >
             <Stack spacing={0.5}>
@@ -29,7 +28,7 @@ const ClassroomItem = ({ classroom, onDetailClick }) => {
 
             <Stack spacing={1} alignItems="center">
                 {/* 별점 표시 */}
-                <RatingStars value={classroom.rating} />
+                <RatingStars value={classroom.rating} readOnly />
 
                 {/* 상세보기 버튼 */}
                 <Button
@@ -37,15 +36,15 @@ const ClassroomItem = ({ classroom, onDetailClick }) => {
                     variant="outlined"
                     onClick={() => onDetailClick(classroom)}
                     sx={{
-                        borderColor: "#1976d2",
-                        color: "#1976d2",
+                        borderColor: "#b91c1c",
+                        color: "#b91c1c",
                         "&:hover": {
-                            backgroundColor: "#e3f2fd",
-                            borderColor: "#1976d2",
+                            backgroundColor: "#fdecec",
+                            borderColor: "#b91c1c",
                         },
                     }}
                 >
-                    상세보기 &gt;
+                    상세보기 →
                 </Button>
             </Stack>
         </Paper>

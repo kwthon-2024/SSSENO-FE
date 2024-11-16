@@ -12,64 +12,102 @@ import {
     Typography,
 } from "@mui/material";
 
-const ClassroomList = ({ classrooms, onClassroomClick }) => {
+const ClassroomList = ({ classrooms, onClassroomClick, isLoading }) => {
+    if (isLoading) {
+        return (
+            <Typography variant="body1" align="center" sx={{ mt: 3 }}>
+                Loading classrooms...
+            </Typography>
+        );
+    }
+
+    if (!classrooms.length) {
+        return (
+            <Typography variant="body1" align="center" sx={{ mt: 3 }}>
+                No classrooms available.
+            </Typography>
+        );
+    }
+
     return (
-        <TableContainer component={Paper} sx={{ boxShadow: 1, borderRadius: 2 }}>
+        <TableContainer
+            component={Paper}
+            sx={{
+                boxShadow: 2,
+                borderRadius: 3,
+                border: "1px solid",
+                borderColor: "grey.300",
+            }}
+        >
             <Table>
-                {/* 테이블 헤더 */}
                 <TableHead>
-                    <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                    <TableRow sx={{ backgroundColor: "grey.100" }}>
                         <TableCell>
-                            <Typography fontWeight="bold">건물</Typography>
+                            <Typography fontWeight="bold" color="text.primary">
+                                건물
+                            </Typography>
                         </TableCell>
                         <TableCell>
-                            <Typography fontWeight="bold">수용 인원</Typography>
+                            <Typography fontWeight="bold" color="text.primary">
+                                수용 인원
+                            </Typography>
                         </TableCell>
                         <TableCell>
-                            <Typography fontWeight="bold">강의실</Typography>
+                            <Typography fontWeight="bold" color="text.primary">
+                                강의실
+                            </Typography>
                         </TableCell>
                         <TableCell>
-                            <Typography fontWeight="bold">평가</Typography>
+                            <Typography fontWeight="bold" color="text.primary">
+                                평가
+                            </Typography>
                         </TableCell>
                         <TableCell align="center">
-                            <Typography fontWeight="bold">상세보기</Typography>
+                            <Typography fontWeight="bold" color="text.primary">
+                                상세보기
+                            </Typography>
                         </TableCell>
                     </TableRow>
                 </TableHead>
-
-                {/* 테이블 본문 */}
                 <TableBody>
                     {classrooms.map((classroom, index) => (
-                        <TableRow key={index}>
-                            {/* 건물 */}
+                        <TableRow
+                            key={index}
+                            sx={{
+                                "&:hover": {
+                                    backgroundColor: "#fdecec",
+                                },
+                            }}
+                        >
                             <TableCell>{classroom.Building_title}</TableCell>
-                            {/* 수용 인원 */}
                             <TableCell>
                                 {classroom.capacity ? `${classroom.capacity}명` : "정보 없음"}
                             </TableCell>
-
-                            {/* 강의실 번호 */}
                             <TableCell>{classroom.Place_title}</TableCell>
-                            {/* 별점 */}
                             <TableCell>
-                                <Rating name="read-only" value={classroom.rating} readOnly size="small" />
+                                <Rating
+                                    name="read-only"
+                                    value={classroom.rating}
+                                    readOnly
+                                    size="small"
+                                />
                             </TableCell>
-                            {/* 상세보기 버튼 */}
                             <TableCell align="center">
                                 <Button
                                     size="small"
                                     variant="outlined"
                                     onClick={() => onClassroomClick(classroom)}
                                     sx={{
-                                        borderColor: "#1976d2",
-                                        color: "#1976d2",
+                                        color: "error.main",
+                                        borderColor: "error.main",
+                                        textTransform: "none",
                                         "&:hover": {
-                                            backgroundColor: "#e3f2fd",
-                                            borderColor: "#1976d2",
+                                            backgroundColor: "error.light",
+                                            color: "white",
                                         },
                                     }}
                                 >
-                                    상세보기 &gt;
+                                    상세보기 →
                                 </Button>
                             </TableCell>
                         </TableRow>

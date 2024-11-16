@@ -8,7 +8,7 @@ import NoticeItem from "../components/Petition/NoticeItem";
 import ModalDialog from "../components/Petition/ModalDialog";
 import { detailMockData } from "../mock/Petition/detailMockData";
 import Header from '../components/shared/Header';
-
+import FilterSection from "../components/Classroom/FilterSection";
 const ITEMS_PER_PAGE = 5;
 
 const PetitionPage = () => {

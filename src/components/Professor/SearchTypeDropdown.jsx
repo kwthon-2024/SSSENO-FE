@@ -14,6 +14,17 @@ const SearchTypeDropdown = ({ searchType, setSearchType }) => {
                 value={searchType}
                 onChange={handleSearchTypeChange}
                 label="검색 유형"
+                sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#b91c1c", // 테두리 색상 설정
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#9e1d1d", // hover 시 색상
+                    },
+                    "&.Mui-focused .MuiaOutlinedInput-notchedOutline": {
+                        borderColor: "#b91c1c", // 포커스 시 색상
+                    },
+                }}
             >
                 <MenuItem value="교수명">교수명</MenuItem>
                 <MenuItem value="과목명">과목명</MenuItem>
