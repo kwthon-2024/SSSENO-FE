@@ -5,7 +5,7 @@ import ClassroomModal from "../components/Classroom/ClassroomModal";
 import AdvancedSearchModal from "../components/Classroom/AdvancedSearchModal";
 import FilterDropdown from "../components/Classroom/FilterDropdown"; // 필터 드롭다운 컴포넌트
 import FilterPanel from "../components/Classroom/FilterSection";
-import { fetchRoomList, fetchFilteredRooms, searchRooms } from "../api/classroomAPI";
+import { fetchRoomList, fetchFilteredRooms, searchRooms, fetchRoomDetails } from "../api/classroomAPI";
 
 const ClassroomPage = () => {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -42,41 +42,68 @@ const ClassroomPage = () => {
     const handleApplyFilters = async (filters) => {
         setIsLoading(true);
         setError(null);
+
+        // 서버에 전송할 데이터 준비
+        const formattedFilters = {
+            building_title: filters.building || null,
+            capacity_max: filters.capacity ? parseInt(filters.capacity, 10) : null,
+            type: filters.type || null,
+            has_projector: filters.hasProjector === true, // Boolean 값으로 변환
+            has_mic: filters.hasMic === true, // Boolean 값으로 변환
+            desk_type: filters.deskType || null,
+        };
+
+        console.log("Applying filters:", formattedFilters);
+
         try {
-            const response = await fetchFilteredRooms({
-                building_title: filters.building,
-                capacity_max: parseInt(filters.capacity, 10) || null,
-                type: filters.type || "",
-                has_projector: filters.hasProjector === "true",
-                has_mic: filters.hasMic === "true",
-                desk_type: filters.deskType || "",
-            });
+            const response = await fetchFilteredRooms(formattedFilters);
+            console.log("Filtered rooms response:", response);
+
             setClassrooms(response.data || []);
             setCurrentPage(1);
             setTotalPages(1); // 필터 적용 시 페이지네이션 초기화
         } catch (error) {
-            console.error("필터를 적용하는 데 실패했습니다.", error);
+            console.error("Failed to apply filters:", error);
             setError("필터를 적용하는 중 문제가 발생했습니다.");
         } finally {
             setIsLoading(false);
         }
     };
+
+
+
     // 필터 적용 및 검색 함수
     const handleSearch = async (building, capacity) => {
-        console.log("검색 함수 호출됨:", { building, capacity }); // 검색 요청 로그
+        console.log("검색 함수 호출됨:", { building, capacity });
         setIsLoading(true);
         setError(null);
+
         try {
+            // 1. /classroom/room/search 호출
             const response = await searchRooms(building, capacity);
-            console.log("검색 결과:", response.data); // 결과 로그
-            setClassrooms(response.data || []); // 데이터 저장
+            console.log("검색 응답:", response);
+
+            // 2. 데이터를 매핑하여 리스트 업데이트
+            const rooms = Array.isArray(response) ? response : response.data || [];
+            const mappedClassrooms = rooms.map((room) => ({
+                Building_title: room.building_name,
+                Place_title: room.place_name,
+                capacity: room.capacity,
+                rating: room.rating || 0, // 평점이 없는 경우 기본값 0
+            }));
+
+            console.log("매핑된 데이터:", mappedClassrooms);
+            setClassrooms(mappedClassrooms); // 매핑된 데이터로 상태 업데이트
         } catch (err) {
-            console.error("강의실 검색 실패:", err); // 에러 로그
+            console.error("강의실 검색 실패:", err);
             setError("검색 중 오류가 발생했습니다. 다시 시도해주세요.");
         } finally {
             setIsLoading(false);
         }
     };
+
+
+
 
 
     // 페이지 변경 핸들러

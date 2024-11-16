@@ -31,7 +31,11 @@ export const fetchFilteredRooms = async (filters) => {
         console.log("Filtered rooms response:", response.data);
         return response.data;
     } catch (error) {
-        console.error("Failed to fetch filtered rooms:", error.message);
+        if (error.response) {
+            console.error("Server responded with:", error.response.data);
+        } else {
+            console.error("Failed to fetch filtered rooms:", error.message);
+        }
         throw error;
     }
 };
@@ -87,13 +91,18 @@ export const createReview = async (reviewData) => {
     try {
         console.log("Creating review with data:", reviewData);
         const response = await axios.post(`${API_BASE_URL}/review/create`, reviewData);
-        console.log("Create review response:", response.data);
+        console.log("Review created successfully:", response.data);
         return response.data;
     } catch (error) {
-        console.error("Failed to create review:", error.message);
+        if (error.response) {
+            console.error("Server responded with:", error.response.data);
+        } else {
+            console.error("Failed to create review:", error.message);
+        }
         throw error;
     }
 };
+
 
 /**
  * Update an existing room review.

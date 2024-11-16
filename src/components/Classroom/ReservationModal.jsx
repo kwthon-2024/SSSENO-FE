@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import ReservationSurveyModal from "./ReservationSurveyModal";
-import { fetchRoomDetails } from "../../api/classroomAPI"; // API 함수 호출
+import { fetchRoomDetails } from "../../api/classroomAPI";
 
 const modalStyle = {
     position: "absolute",
@@ -33,19 +33,18 @@ const ReservationModal = ({ open, onClose, classroom, onComplete }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTimes, setSelectedTimes] = useState([]);
     const [surveyOpen, setSurveyOpen] = useState(false);
-    const [possibleTimetable, setPossibleTimetable] = useState([]); // API로 가져온 가능한 시간표 데이터
+    const [possibleTimetable, setPossibleTimetable] = useState([2, 4, 6, 8]); // 임의의 기본 가능한 시간 설정
 
     useEffect(() => {
         const loadPossibleTimetable = async () => {
             if (classroom) {
                 try {
-                    // 강의실 상세 정보에서 가능한 시간표 데이터 가져오기
                     const response = await fetchRoomDetails(
                         classroom.Building_title,
                         classroom.Place_title
                     );
                     const timetable = response.data?.[0]?.Possible_timetable || [];
-                    setPossibleTimetable(timetable); // 가능한 시간표 업데이트
+                    setPossibleTimetable(timetable.length ? timetable : [2, 4, 6, 8]); // API 응답 없으면 기본값 유지
                 } catch (error) {
                     console.error("강의실 데이터 로드 실패:", error);
                 }
@@ -160,7 +159,6 @@ const ReservationModal = ({ open, onClose, classroom, onComplete }) => {
                 </Box>
             </Modal>
 
-            {/* 설문조사 모달 */}
             <ReservationSurveyModal
                 open={surveyOpen}
                 onClose={() => setSurveyOpen(false)}
@@ -170,7 +168,7 @@ const ReservationModal = ({ open, onClose, classroom, onComplete }) => {
                     date: selectedDate.toISOString().split("T")[0],
                     times: selectedTimes,
                 }}
-                onSubmit={(info) => onComplete(info)} // 예약 정보 전달
+                onSubmit={(info) => onComplete(info)}
             />
         </>
     );

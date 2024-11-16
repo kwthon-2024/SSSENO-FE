@@ -38,22 +38,23 @@ const modalStyle = {
 const ClassroomModal = ({ open, onClose, classroom }) => {
     const [roomDetails, setRoomDetails] = useState(null);
     const [roomReview, setRoomReview] = useState(null);
-    const [isReservationOpen, setReservationOpen] = useState(false); // 예약 모달
-    const [isConsentOpen, setConsentOpen] = useState(false); // 동의 모달
-    const [isConfirmationOpen, setConfirmationOpen] = useState(false); // 확인 모달
+    const [isReservationOpen, setReservationOpen] = useState(false);
+    const [isConsentOpen, setConsentOpen] = useState(false);
+    const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const [reservationInfo, setReservationInfo] = useState({
         building: "",
         room: "",
         times: [],
         date: "",
     });
-    const [isRatingOpen, setRatingOpen] = useState(false); // 평가 모달
-    const [isCompleteOpen, setCompleteOpen] = useState(false); // 완료 모달
+    const [isRatingModalOpen, setRatingModalOpen] = useState(false); // 평가 모달 상태 추가
+    const [isCompleteOpen, setCompleteOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null); // Error 상태 변수 선언
+    const [error, setError] = useState(null);
 
-    const handleRatingSubmit = () => {
-        setRatingOpen(false);
+    const handleRatingSubmit = (response) => {
+        console.log("리뷰 제출 성공:", response);
+        setRatingModalOpen(false);
         setCompleteOpen(true);
     };
 
@@ -222,7 +223,7 @@ const ClassroomModal = ({ open, onClose, classroom }) => {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => setRatingOpen(true)}
+                            onClick={() => setRatingModalOpen(true)}
                         >
                             평가하기
                         </Button>
@@ -262,8 +263,8 @@ const ClassroomModal = ({ open, onClose, classroom }) => {
 
             {/* 평가 모달 */}
             <RatingModal
-                open={isRatingOpen}
-                onClose={() => setRatingOpen(false)}
+                open={isRatingModalOpen}
+                onClose={() => setRatingModalOpen(false)}
                 classroom={classroom}
                 onSubmit={handleRatingSubmit}
             />

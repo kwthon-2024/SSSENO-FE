@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import ProfessorModal from "./ProfessorModal";
 
-const ProfessorItem = ({ professor, onClick }) => {
+const ProfessorItem = ({ professor }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => setModalOpen(true);
@@ -15,8 +15,8 @@ const ProfessorItem = ({ professor, onClick }) => {
         borderColor: "grey.300",
         borderRadius: 2,
         p: 2,
-        width: "100%", // 너비를 부모 컨테이너에 맞춤
-        maxWidth: "1000px", // 리스트 항목의 최대 너비 제한
+        width: "100%",
+        maxWidth: "1000px",
         "&:hover": {
           borderColor: "error.light",
         },
@@ -25,15 +25,14 @@ const ProfessorItem = ({ professor, onClick }) => {
         alignItems: "center",
       }}
     >
-
       {/* 이미지 및 텍스트 */}
       <Box display="flex" gap={2}>
         <Box
           component="img"
-          src={professor.Professor_photo}
+          src={professor.Professor_photo || "https://via.placeholder.com/80"}
           alt={`${professor.Professor_name} 사진`}
           sx={{
-            width: 80, // 이미지 크기 축소
+            width: 80,
             height: 80,
             borderRadius: 1,
             objectFit: "cover",
@@ -48,7 +47,7 @@ const ProfessorItem = ({ professor, onClick }) => {
             <Typography
               variant="caption"
               color="text.secondary"
-              sx={{ ml: 1 }} // 이름과 학과명 간 간격
+              sx={{ ml: 1 }}
             >
               / {professor.Department}
             </Typography>
@@ -71,7 +70,7 @@ const ProfessorItem = ({ professor, onClick }) => {
         sx={{
           textTransform: "none",
           fontWeight: "bold",
-          minWidth: "auto", // 버튼 최소 너비 제거
+          minWidth: "auto",
         }}
         onClick={handleOpenModal}
       >
@@ -79,7 +78,7 @@ const ProfessorItem = ({ professor, onClick }) => {
       </Button>
 
       {/* Modal 연결 */}
-      <ProfessorModal open={modalOpen} handleClose={handleCloseModal} professor={professor} />
+      <ProfessorModal open={modalOpen} onClose={handleCloseModal} professor={professor} />
     </Box>
   );
 };

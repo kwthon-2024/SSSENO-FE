@@ -53,16 +53,20 @@ const AdvancedSearchModal = ({ open, onClose, onApplyFilters }) => {
 
     const handleSearch = () => {
         const parsedFilters = {
-            building_title: filters.building,
+            building_title: filters.building || null,
             capacity_max: filters.capacity ? parseInt(filters.capacity, 10) : null,
-            type: filters.type || "",
-            hasMic: filters.hasMic === "true",
-            hasProjector: filters.hasProjector === "true",
-            deskType: filters.deskType || "",
+            type: filters.type || null,
+            has_projector: filters.hasProjector === "true",
+            has_mic: filters.hasMic === "true",
+            desk_type: filters.deskType || null,
         };
-        onApplyFilters(parsedFilters); // 부모 컴포넌트로 필터 데이터 전달
-        onClose(); // 모달 닫기
+
+        console.log("Parsed filters for search:", parsedFilters); // 전송 데이터 로그
+
+        onApplyFilters(parsedFilters); // 부모 컴포넌트로 필터 전달
+        onClose();
     };
+
 
     return (
         <Modal open={open} onClose={onClose}>

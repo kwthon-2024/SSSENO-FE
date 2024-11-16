@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 
 const ClassroomList = ({ classrooms, onClassroomClick, isLoading }) => {
+
     if (isLoading) {
         return (
             <Typography variant="body1" align="center" sx={{ mt: 3 }}>

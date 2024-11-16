@@ -41,6 +41,7 @@ const ProfessorModal = ({ open, onClose, professor }) => {
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={modalStyle}>
+                {/* 헤더 */}
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="h6">{Professor_name} 교수</Typography>
                     <IconButton onClick={onClose}>
@@ -50,6 +51,7 @@ const ProfessorModal = ({ open, onClose, professor }) => {
 
                 <Divider sx={{ my: 2 }} />
 
+                {/* 교수 정보 및 레이더 차트 */}
                 <Stack direction="row" spacing={4}>
                     <Stack spacing={1} flex={1}>
                         <ProfessorPhoto
@@ -74,8 +76,6 @@ const ProfessorModal = ({ open, onClose, professor }) => {
 
                 <Divider sx={{ my: 3 }} />
 
-
-
                 {/* 진행 중인 수업 */}
                 <Typography variant="subtitle1" sx={{ mb: 2 }}>
                     진행 중인 수업:
@@ -92,18 +92,17 @@ const ProfessorModal = ({ open, onClose, professor }) => {
                     )}
                 </Stack>
 
+                {/* 하단 버튼 */}
                 <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 4 }}>
-                    {/* 평가하기 버튼 */}
                     <Button variant="contained" color="primary" onClick={() => setRatingModalOpen(true)}>
                         평가하기
                     </Button>
-
-                    {/* 취소하기 버튼 */}
                     <Button variant="outlined" color="secondary" onClick={onClose}>
                         취소하기
                     </Button>
                 </Stack>
 
+                {/* 평가 모달 */}
                 <RatingModal
                     open={ratingModalOpen}
                     onClose={() => setRatingModalOpen(false)}
